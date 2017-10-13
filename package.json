@@ -1,0 +1,24 @@
+{
+  "name": "prello-api",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "babel-watch api/server.js",
+    "start": "npm run build && npm run serve",
+    "build": "babel api/*.js -d dist",
+    "serve": "node ./dist/api/server.js",
+    "lint": "eslint **/*.js --ignore-pattern node_modules/"
+  },
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongoose": "^4.12.1"
+  },
+  "devDependencies": {
+    "babel-watch": "^2.0.7",
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb-base": "^12.0.2",
+    "eslint-plugin-import": "^2.7.0"
+  }
+}
