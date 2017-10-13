@@ -9,7 +9,10 @@ const listSchema = new Schema({
   rank: {
     type: Number,
   },
-  cards: [{ type: Schema.Types.ObjectId, ref: 'Card' }],
+  cards: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Card',
+  }],
 })
 
 listSchema.set('toJSON', {
