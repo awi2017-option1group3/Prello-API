@@ -6,7 +6,10 @@ const cardSchema = new Schema({
   title: {
     type: String,
   },
-  list: { type: Schema.Types.ObjectId, ref: 'List' },
+  listId: {
+    type: Schema.Types.ObjectId,
+    ref: 'List',
+  },
 })
 
 cardSchema.set('toJSON', {
