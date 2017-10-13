@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "babel-watch api/server.js",
-    "start": "npm run build && npm run serve",
-    "build": "babel api/*.js -d dist",
-    "serve": "node ./dist/api/server.js",
+    "start": "npm run clean && npm run build && npm run serve",
+    "clean": "rm -rf build && mkdir build",
+    "build": "babel -d ./build ./api -s",
+    "serve": "node ./build/server.js",
     "lint": "eslint **/*.js --ignore-pattern node_modules/"
   },
   "dependencies": {
