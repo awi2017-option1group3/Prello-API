@@ -1,0 +1,9 @@
+{
+    "extends": "airbnb-base",
+    "rules": {
+        "semi": ["error", "never"],
+        "max-len": [2, 200],
+        "no-trailing-spaces": 0,
+        "no-plusplus": 0
+    }
+}
