@@ -27,4 +27,10 @@ router.post('/', (req, res) => {
   })
 })
 
+router.delete('/:cardId', (req, res) => {
+  Card.remove({ _id: req.params.cardId })
+    .catch(err => res.send(err))
+    .then(() => res.end())
+})
+
 export default router
