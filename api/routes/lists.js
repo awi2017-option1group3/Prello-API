@@ -24,9 +24,34 @@ router.get('/', (req, res) => {
 })
 
 router.patch('/:listId', (req, res) => {
-  const newData = {
-    rank: parseInt(req.body.rank, 10),
+  function checkRequest() {
+    if (Object.keys(req.body).length === 2 && Object.keys(req.body).includes('rank') && Object.keys(req.body).includes('title')) {
+      const data = {
+        rank: parseInt(req.body.rank, 10),
+        title: req.body.title,
+      }
+      return data
+    } else if (Object.keys(req.body).length === 1 && Object.keys(req.body).includes('rank')) {
+      const data = {
+        rank: parseInt(req.body.rank, 10),
+      }
+      return data
+    } else if (Object.keys(req.body).length === 1 && Object.keys(req.body).includes('title')) {
+      const data = {
+        title: req.body.title,
+      }
+      return data
+    } 
+    const data = {
+      rank: parseInt(req.body.rank, 10),
+      title: req.body.title,
+      cards: req.body.cards,
+    }
+    return data
   }
+
+  const newData = checkRequest()
+
   List.update({ _id: req.params.listId }, newData, {}, (err, listPatched) => {
     if (err) {
       res.send(err)
