@@ -55,39 +55,15 @@ router.post('/:id/cards/', (req, res) => {
 })
 
 router.put('/:id', (req, res) => {
-  function checkRequest() {
-    if (Object.keys(req.body).length === 2 && Object.keys(req.body).includes('rank') && Object.keys(req.body).includes('title')) {
-      const data = {
-        rank: parseInt(req.body.rank, 10),
-        title: req.body.title,
-      }
-      return data
-    } else if (Object.keys(req.body).length === 1 && Object.keys(req.body).includes('rank')) {
-      const data = {
-        rank: parseInt(req.body.rank, 10),
-      }
-      return data
-    } else if (Object.keys(req.body).length === 1 && Object.keys(req.body).includes('title')) {
-      const data = {
-        title: req.body.title,
-      }
-      return data
-    }
-    const data = {
-      rank: parseInt(req.body.rank, 10),
-      title: req.body.title,
-      cards: req.body.cards,
-    }
-    return data
+  const data = {
+    ...typeof req.body.rank !== 'undefined' && { rank: parseInt(req.body.rank, 10) },
+    ...typeof req.body.title !== 'undefined' && { title: req.body.title },
   }
-
-  const newData = checkRequest()
-
-  List.update({ _id: req.params.id }, newData, {}, (err, listPatched) => {
+  List.update({ _id: req.params.id }, data, {}, (err, listUpdated) => {
     if (err) {
       res.send(err)
     } else {
-      res.json(listPatched)
+      res.json(listUpdated)
     }
   })
 })
