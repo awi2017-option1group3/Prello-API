@@ -19,10 +19,10 @@ router.get('/', (req, res) => {
   })
 })
 
-router.patch('/:cardId', (req, res) => {
+router.patch('/:listId', (req, res) => {
   const newData = {
-    listId: req.body.listId,
     rank: parseInt(req.body.rank, 10),
+    listId: req.body.listId,
   }
   Card.update({ _id: req.params.cardId }, newData, {}, (err, cardPatched) => {
     if (err) {
