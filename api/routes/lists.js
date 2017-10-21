@@ -1,18 +1,10 @@
 import express from 'express'
 import List from '../models/List'
 import Card from '../models/Card'
-import cards from './cards'
 
 const router = express.Router()
 
-router.delete('/:listId', (req, res) => {
-  List.remove({ _id: req.params.listId })
-    .catch(err => res.send(err))
-    .then(() => Card.remove({ listId: req.params.listId }))
-    .catch(err => res.send(err))
-    .then(() => res.end())
-})
-
+// TODO remove in favor of Boards routes (when we will have these routes)
 router.get('/', (req, res) => {
   List.find({}, (err, lists) => {
     if (err) {
@@ -23,19 +15,17 @@ router.get('/', (req, res) => {
   })
 })
 
-router.patch('/:listId', (req, res) => {
-  const newData = {
-    rank: parseInt(req.body.rank, 10),
-  }
-  List.update({ _id: req.params.listId }, newData, {}, (err, listPatched) => {
+router.get('/:id/cards/', (req, res) => {
+  Card.find({ listId: req.params.id }, (err, cards) => {
     if (err) {
       res.send(err)
     } else {
-      res.json(listPatched)
+      res.json(cards)
     }
   })
 })
 
+// TODO remove in favor of Boards routes (when we will have these routes)
 router.post('/', (req, res) => {
   const list = new List({
     title: req.body.title,
@@ -50,6 +40,40 @@ router.post('/', (req, res) => {
   })
 })
 
-router.use('/:listId/cards', cards)
+router.post('/:id/cards/', (req, res) => {
+  const card = new Card({
+    title: req.body.title,
+    listId: req.params.id,
+  })
+  card.save((err, newCard) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(newCard)
+    }
+  })
+})
+
+router.put('/:id', (req, res) => {
+  const data = {
+    ...typeof req.body.rank !== 'undefined' && { rank: parseInt(req.body.rank, 10) },
+    ...typeof req.body.title !== 'undefined' && { title: req.body.title },
+  }
+  List.update({ _id: req.params.id }, data, {}, (err, listUpdated) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(listUpdated)
+    }
+  })
+})
+
+router.delete('/:id', (req, res) => {
+  List.remove({ _id: req.params.id })
+    .catch(err => res.send(err))
+    .then(() => Card.remove({ listId: req.params.id }))
+    .catch(err => res.send(err))
+    .then(() => res.end())
+})
 
 export default router
