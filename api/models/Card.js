@@ -6,6 +6,9 @@ const cardSchema = new Schema({
   title: {
     type: String,
   },
+  rank: {
+    type: Number,
+  },
   listId: {
     type: Schema.Types.ObjectId,
     ref: 'List',
