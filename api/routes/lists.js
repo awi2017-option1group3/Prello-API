@@ -4,17 +4,6 @@ import Card from '../models/Card'
 
 const router = express.Router()
 
-// TODO remove in favor of Boards routes (when we will have these routes)
-router.get('/', (req, res) => {
-  List.find({}, (err, lists) => {
-    if (err) {
-      res.send(err)
-    } else {
-      res.json(lists)
-    }
-  })
-})
-
 router.get('/:id/cards/', (req, res) => {
   Card.find({ listId: req.params.id }, (err, cards) => {
     if (err) {
@@ -25,24 +14,10 @@ router.get('/:id/cards/', (req, res) => {
   })
 })
 
-// TODO remove in favor of Boards routes (when we will have these routes)
-router.post('/', (req, res) => {
-  const list = new List({
-    title: req.body.title,
-    rank: req.body.rank,
-  })
-  list.save((err, newList) => {
-    if (err) {
-      res.send(err)
-    } else {
-      res.json(newList)
-    }
-  })
-})
-
 router.post('/:id/cards/', (req, res) => {
   const card = new Card({
     title: req.body.title,
+    rank: req.body.rank,
     listId: req.params.id,
   })
   card.save((err, newCard) => {

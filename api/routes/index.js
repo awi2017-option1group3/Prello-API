@@ -1,9 +1,11 @@
 import express from 'express'
+import boards from './boards'
 import lists from './lists'
 import cards from './cards'
 
 const router = express.Router()
 
+router.use('/boards', boards)
 router.use('/lists', lists)
 router.use('/cards', cards)
 
