@@ -48,4 +48,17 @@ router.post('/', (req, res) => {
   })
 })
 
+router.put('/:cardId', (req, res) => {
+  const data = {
+    ...typeof req.body.title !== 'undefined' && { title: req.body.title },
+  }
+  Card.update({ _id: req.params.cardId }, data, {}, (err, cardUpdated) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(cardUpdated)
+    }
+  })
+})
+
 export default router
