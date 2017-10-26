@@ -13,7 +13,10 @@ const cardSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'List',
   },
-})
+  labels: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Label',
+  }],})
 
 cardSchema.set('toJSON', {
   virtuals: true,
