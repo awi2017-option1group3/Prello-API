@@ -1,6 +1,5 @@
 import express from 'express'
 import Card from '../models/Card'
-import Label from '../models/Label'
 
 const router = express.Router({ mergeParams: true })
 
@@ -10,39 +9,15 @@ router.delete('/:cardId', (req, res) => {
     .then(() => res.end())
 })
 
-router.get('/', (req, res) => {
-  Card.find({ listId: req.params.listId }, (err, cards) => {
-    if (err) {
-      res.send(err)
-    } else {
-      res.json(cards)
-    }
-  })
-})
-
 router.get('/:cardId/labels/', (req, res) => {
-  Label.find({ _id: req.params.cardId }, (err, cards) => {
+  Card.findOne({ _id: req.params.cardId }, (err, card) => {
     if (err) {
       res.send(err)
     } else {
-      res.json(cards.labels.populate())
+      res.json(card.labels)
     }
-  })
-})
-
-router.post('/', (req, res) => {
-  const card = new Card({
-    title: req.body.title,
-    rank: req.body.rank,
-    listId: req.params.listId,
-  })
-  card.save((err, newCard) => {
-    if (err) {
-      res.send(err)
-    } else {
-      res.json(newCard)
-    }
-  })
+  }).populate('labels')
+    .exec()
 })
 
 router.post('/:cardId/labels/', (req, res) => {
