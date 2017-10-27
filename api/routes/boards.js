@@ -1,6 +1,7 @@
 import express from 'express'
 import Board from '../models/Board'
 import List from '../models/List'
+import Label from '../models/Label'
 
 const router = express.Router()
 
@@ -24,6 +25,16 @@ router.get('/:id/lists/', (req, res) => {
   })
 })
 
+router.get('/:id/labels', (req, res) => {
+  Label.find({ boardId: req.params.id }, (err, labels) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(labels)
+    }
+  })
+})
+
 router.post('/', (req, res) => {
   const board = new Board({
     title: req.body.title,
@@ -33,6 +44,21 @@ router.post('/', (req, res) => {
       res.send(err)
     } else {
       res.json(newBoard)
+    }
+  })
+})
+
+router.post('/:id/labels/', (req, res) => {
+  const label = new Label({
+    name: req.body.name,
+    color: req.body.color,
+    boardId: req.params.id,
+  })
+  label.save((err, newLabel) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(newLabel)
     }
   })
 })

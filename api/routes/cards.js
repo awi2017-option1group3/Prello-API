@@ -1,5 +1,6 @@
 import express from 'express'
 import Card from '../models/Card'
+import Label from '../models/Label'
 
 const router = express.Router({ mergeParams: true })
 
@@ -19,16 +20,12 @@ router.get('/', (req, res) => {
   })
 })
 
-router.patch('/:listId', (req, res) => {
-  const newData = {
-    rank: parseInt(req.body.rank, 10),
-    listId: req.body.listId,
-  }
-  Card.update({ _id: req.params.cardId }, newData, {}, (err, cardPatched) => {
+router.get('/:cardId/labels/', (req, res) => {
+  Label.find({ _id: req.params.cardId }, (err, cards) => {
     if (err) {
       res.send(err)
     } else {
-      res.json(cardPatched)
+      res.json(cards.labels.populate())
     }
   })
 })
@@ -48,9 +45,31 @@ router.post('/', (req, res) => {
   })
 })
 
+router.post('/:cardId/labels/', (req, res) => {
+  const update = {
+    $push:
+    { labels: req.body.labelId },
+  }
+  Card.findOneAndUpdate(
+    { _id: req.params.cardId },
+    update,
+    { safe: true, upsert: true },
+    (err, cardUpdated) => {
+      if (err) {
+        res.send(err)
+      } else {
+        res.json(cardUpdated)
+      }
+    },
+  )
+})
+
 router.put('/:cardId', (req, res) => {
   const data = {
     ...typeof req.body.title !== 'undefined' && { title: req.body.title },
+    ...typeof req.body.listId !== 'undefined' && { listId: req.body.listId },
+    ...typeof req.body.rank !== 'undefined' && { rank: parseInt(req.body.rank, 10) },
+    ...typeof req.body.labels !== 'undefined' && { labels: req.body.labels },
   }
   Card.update({ _id: req.params.cardId }, data, {}, (err, cardUpdated) => {
     if (err) {
