@@ -1,5 +1,6 @@
 import express from 'express'
 import Card from '../models/Card'
+import Label from '../models/Label'
 
 const router = express.Router({ mergeParams: true })
 
@@ -40,6 +41,18 @@ router.post('/', (req, res) => {
       res.send(err)
     } else {
       res.json(newCard)
+    }
+  })
+})
+
+router.post('/:cardId/labels/', (req, res) => {
+  const card = Card.findOne({ _id: req.params.cardId })
+  card.labels.push(req.body.labelId)
+  card.save((err, cardUpdated) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(cardUpdated)
     }
   })
 })

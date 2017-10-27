@@ -16,7 +16,8 @@ const cardSchema = new Schema({
   labels: [{
     type: Schema.Types.ObjectId,
     ref: 'Label',
-  }],})
+  }], 
+})
 
 cardSchema.set('toJSON', {
   virtuals: true,
