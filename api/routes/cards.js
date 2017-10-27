@@ -46,15 +46,22 @@ router.post('/', (req, res) => {
 })
 
 router.post('/:cardId/labels/', (req, res) => {
-  const card = Card.findOne({ _id: req.params.cardId })
-  card.labels.push(req.body.labelId)
-  card.save((err, cardUpdated) => {
-    if (err) {
-      res.send(err)
-    } else {
-      res.json(cardUpdated)
-    }
-  })
+  const update = {
+    $push:
+    { labels: req.body.labelId },
+  }
+  Card.findOneAndUpdate(
+    { _id: req.params.cardId },
+    update,
+    { safe: true, upsert: true },
+    (err, cardUpdated) => {
+      if (err) {
+        res.send(err)
+      } else {
+        res.json(cardUpdated)
+      }
+    },
+  )
 })
 
 router.put('/:cardId', (req, res) => {

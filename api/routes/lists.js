@@ -12,12 +12,8 @@ router.get('/:id/cards/', (req, res) => {
       res.json(cards)
     }
   })
-  /*
     .populate('labels')
-    .exec((err, label) => {
-      if (err) return handleError(err)
-    })
-   */
+    .exec()
 })
 
 router.post('/:id/cards/', (req, res) => {
@@ -25,7 +21,7 @@ router.post('/:id/cards/', (req, res) => {
     title: req.body.title,
     rank: req.body.rank,
     listId: req.params.id,
-    labels: [],
+    labels: ['59f2f00402a145628b1b6d7a'],
   })
   card.save((err, newCard) => {
     if (err) {
