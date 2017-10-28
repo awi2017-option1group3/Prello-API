@@ -25,6 +25,16 @@ router.get('/:id/lists/', (req, res) => {
   })
 })
 
+router.get('/:id', (req, res) => {
+  Board.findOne({ _id: req.params.id }, (err, board) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(board)
+    }
+  })
+})
+
 router.get('/:id/labels', (req, res) => {
   Label.find({ boardId: req.params.id }, (err, labels) => {
     if (err) {
@@ -34,7 +44,7 @@ router.get('/:id/labels', (req, res) => {
     }
   })
 })
-
+      
 router.post('/', (req, res) => {
   const board = new Board({
     title: req.body.title,

@@ -37,13 +37,11 @@ router.put('/:id', (req, res) => {
     ...typeof req.body.rank !== 'undefined' && { rank: parseInt(req.body.rank, 10) },
     ...typeof req.body.title !== 'undefined' && { title: req.body.title },
   }
-  List.update({ _id: req.params.id }, data, {}, (err, listUpdated) => {
-    if (err) {
-      res.send(err)
-    } else {
-      res.json(listUpdated)
-    }
-  })
+  List.update({ _id: req.params.id }, data, {})
+    .catch(err => res.send(err))
+    .then(() => List.findOne({ _id: req.params.id }).exec())
+    .catch(err => res.send(err))
+    .then(listUpdated => res.json(listUpdated))
 })
 
 router.delete('/:id', (req, res) => {

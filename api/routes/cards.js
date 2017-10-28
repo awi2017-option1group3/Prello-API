@@ -46,13 +46,11 @@ router.put('/:cardId', (req, res) => {
     ...typeof req.body.rank !== 'undefined' && { rank: parseInt(req.body.rank, 10) },
     ...typeof req.body.labels !== 'undefined' && { labels: req.body.labels },
   }
-  Card.update({ _id: req.params.cardId }, data, {}, (err, cardUpdated) => {
-    if (err) {
-      res.send(err)
-    } else {
-      res.json(cardUpdated)
-    }
-  })
+  Card.update({ _id: req.params.cardId }, data, {})
+    .catch(err => res.send(err))
+    .then(() => Card.findOne({ _id: req.params.cardId }).exec())
+    .catch(err => res.send(err))
+    .then(cardUpdated => res.json(cardUpdated))
 })
 
 export default router
