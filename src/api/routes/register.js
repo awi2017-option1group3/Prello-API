@@ -19,6 +19,7 @@ router.post('/', (req, res) => {
       email: req.body.email,
     }
     User.find({ email: req.body.email }).exec()
+      .catch(err => res.send(err))
       .then((usersWithSameEmail) => {
         if (usersWithSameEmail.length > 0) {
           res.send('Email already used. Please login instead of register.')
@@ -26,6 +27,7 @@ router.post('/', (req, res) => {
           return User.find({ username: new RegExp(usernameFragment, 'i') }).exec()
         }
       })
+      .catch(err => res.send(err))
       .then((existingUsers) => {
         userData.username = usernameFragment.concat('.').concat(existingUsers.length + 1)
         userData.initials = req.body.fullName.split(' ').map(word => word[0]).join('')
@@ -36,6 +38,7 @@ router.post('/', (req, res) => {
         const user = new User(userData)
         return user.save()
       })
+      .catch(err => res.send(err))
       .then(() => {
         res.status(201).end()
       })

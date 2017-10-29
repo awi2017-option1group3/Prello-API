@@ -1,0 +1,23 @@
+html
+    head
+        title Client registration
+    body
+        form(method='post', action='/auth/clients')
+            h2 Client registration
+            div
+                p To use our API with your application, you need to create a client account. You must use the "client id" and the "client secret" returned in your Authentication header for each request to the API.
+            div
+                p
+                    strong Your company name
+                input(type='input', name='companyName', value=companyName)
+
+                p
+                    strong Your app name
+                input(type='input', name='appName', value=appName)
+
+                p
+                    strong Password (to generate your secret)
+                input(type='password', name='password', value=password)
+
+                p #{message}
+                button(type='submit') Register

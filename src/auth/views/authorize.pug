@@ -1,0 +1,14 @@
+html
+    head
+        title Authorize access
+    body
+        form(method='post', action='/auth/authorize', role='form')
+            h2 Authorize
+            div
+                p Do you want to authorize this application to access to you account ?
+            div
+                input(type='hidden', name='allow', value='yes')
+                input(type='hidden', name='client_id', value=client_id)
+                input(type='hidden', name='redirect_uri', value=redirect_uri)
+                input(type='hidden', name='response_type', value='code')
+                button(type='submit') Authorize
