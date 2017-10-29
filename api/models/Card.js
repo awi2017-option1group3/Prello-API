@@ -21,6 +21,10 @@ const cardSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   }],
+  cardResponsible: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
 })
 
 cardSchema.set('toJSON', {
