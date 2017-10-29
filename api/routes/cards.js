@@ -31,6 +31,17 @@ router.get('/:cardId/members/', (req, res) => {
     .exec()
 })
 
+router.get('/:cardId/responsible/', (req, res) => {
+  Card.findOne({ _id: req.params.cardId }, (err, card) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(card.cardResponsible)
+    }
+  }).populate('cardResponsible')
+    .exec()
+})
+
 router.post('/:cardId/labels/', (req, res) => {
   const update = {
     $push:
@@ -69,6 +80,25 @@ router.post('/:cardId/members/', (req, res) => {
   )
 })
 
+router.post('/:cardId/responsible/', (req, res) => {
+  const update = {
+    $set:
+      { cardResponsible: req.body.responsibleId },
+  }
+  Card.findOneAndUpdate(
+    { _id: req.params.cardId },
+    update,
+    { safe: true, upsert: true },
+    (err, cardUpdated) => {
+      if (err) {
+        res.send(err)
+      } else {
+        res.json(cardUpdated)
+      }
+    },
+  )
+})
+
 router.put('/:cardId', (req, res) => {
   const data = {
     ...typeof req.body.title !== 'undefined' && { title: req.body.title },
@@ -76,10 +106,15 @@ router.put('/:cardId', (req, res) => {
     ...typeof req.body.rank !== 'undefined' && { rank: parseInt(req.body.rank, 10) },
     ...typeof req.body.labels !== 'undefined' && { labels: req.body.labels },
     ...typeof req.body.assignees !== 'undefined' && { assignees: req.body.assignees },
+    ...typeof req.body.cardResponsible !== 'undefined' && { cardResponsible: req.body.cardResponsible },
   }
   Card.update({ _id: req.params.cardId }, data, {})
     .catch(err => res.send(err))
-    .then(() => Card.findOne({ _id: req.params.cardId }).populate('labels').populate('assignees').exec())
+    .then(() => Card.findOne({ _id: req.params.cardId })
+      .populate('labels')
+      .populate('assignees')
+      .populate('cardResponsible')
+      .exec())
     .catch(err => res.send(err))
     .then(cardUpdated => res.json(cardUpdated))
 })
