@@ -88,4 +88,14 @@ router.post('/:id/lists/', (req, res) => {
   })
 })
 
+router.delete('/:boardId', (req, res) => {
+  Board.remove({ _id: req.params.id })
+    .catch(err => res.send(err))
+    .then(() => List.remove({ boardId: req.params.id }))
+    .catch(err => res.send(err))
+    .then(() => Card.remove({ listId: req.params.id }))
+    .catch(err => res.send(err))
+    .then(() => res.end())
+})
+
 export default router
