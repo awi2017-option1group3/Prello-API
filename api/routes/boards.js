@@ -2,6 +2,7 @@ import express from 'express'
 import Board from '../models/Board'
 import List from '../models/List'
 import Label from '../models/Label'
+import Card from '../models/Card'
 
 const router = express.Router()
 
@@ -89,11 +90,20 @@ router.post('/:id/lists/', (req, res) => {
 })
 
 router.delete('/:boardId', (req, res) => {
-  Board.remove({ _id: req.params.id })
+  Board.remove({ _id: req.params.boardId })
     .catch(err => res.send(err))
-    .then(() => List.remove({ boardId: req.params.id }))
-    .catch(err => res.send(err))
-    .then(() => Card.remove({ listId: req.params.id }))
+    .then(() => {
+      List.find({ boardId: req.params.boardId }, (err, lists) => {
+        if (err) {
+          res.send(err)
+        } else {
+          lists.forEach(function(list) {
+            Card.remove({ listId: list.id })
+            list.remove()
+          }, this);
+        }
+      })   
+    })
     .catch(err => res.send(err))
     .then(() => res.end())
 })
