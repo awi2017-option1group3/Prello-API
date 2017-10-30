@@ -104,6 +104,7 @@ router.put('/:cardId', (req, res) => {
     ...typeof req.body.title !== 'undefined' && { title: req.body.title },
     ...typeof req.body.listId !== 'undefined' && { listId: req.body.listId },
     ...typeof req.body.rank !== 'undefined' && { rank: parseInt(req.body.rank, 10) },
+    ...typeof req.body.dueComplete !== 'undefined' && { dueComplete: req.body.dueComplete },
     ...typeof req.body.labels !== 'undefined' && { labels: req.body.labels },
     ...typeof req.body.assignees !== 'undefined' && { assignees: req.body.assignees },
     ...typeof req.body.cardResponsible !== 'undefined' && { cardResponsible: req.body.cardResponsible },
