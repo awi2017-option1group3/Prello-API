@@ -6,12 +6,27 @@ const cardSchema = new Schema({
   title: {
     type: String,
   },
+  dueComplete: {
+    type: Date,
+  },
   rank: {
     type: Number,
   },
   listId: {
     type: Schema.Types.ObjectId,
     ref: 'List',
+  },
+  labels: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Label',
+  }],
+  assignees: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  cardResponsible: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
 })
 

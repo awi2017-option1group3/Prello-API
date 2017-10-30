@@ -12,6 +12,10 @@ router.get('/:id/cards/', (req, res) => {
       res.json(cards)
     }
   })
+    .populate('labels')
+    .populate('assignees')
+    .populate('cardResponsible')
+    .exec()
 })
 
 router.post('/:id/cards/', (req, res) => {
@@ -19,6 +23,10 @@ router.post('/:id/cards/', (req, res) => {
     title: req.body.title,
     rank: req.body.rank,
     listId: req.params.id,
+    cardResponsible: null,
+    dueComplete: null,
+    labels: [],
+    assignees: [],
   })
   card.save((err, newCard) => {
     if (err) {
