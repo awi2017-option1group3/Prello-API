@@ -6,6 +6,9 @@ const cardSchema = new Schema({
   title: {
     type: String,
   },
+  dueComplete: {
+    type: Date,
+  },
   rank: {
     type: Number,
   },

@@ -24,6 +24,7 @@ router.post('/:id/cards/', (req, res) => {
     rank: req.body.rank,
     listId: req.params.id,
     cardResponsible: null,
+    dueComplete: null,
     labels: [],
     assignees: [],
   })
