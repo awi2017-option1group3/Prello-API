@@ -89,6 +89,19 @@ router.post('/:id/lists/', (req, res) => {
   })
 })
 
+router.put('/:id', (req, res) => { 
+  const data = { 
+    ...typeof req.body.title !== 'undefined' && { title: req.body.title }, 
+  } 
+  Board.update({ _id: req.params.id }, data, {}, (err, board) => { 
+    if (err) { 
+      res.send(err) 
+    } else { 
+      res.json(board) 
+    } 
+  }) 
+}) 
+
 router.delete('/:boardId', (req, res) => {
   Board.remove({ _id: req.params.boardId })
     .catch(err => res.send(err))
