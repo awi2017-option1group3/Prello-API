@@ -6,9 +6,7 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: true,
-    index: {
-      unique: true,
-    },
+    unique: true,
   },
   password: {
     type: String,
@@ -18,6 +16,7 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   fullName: {
     type: String,
@@ -30,6 +29,8 @@ const userSchema = new Schema({
   bio: {
     type: String,
   },
+  passwordResetToken: String,
+  resetTokenExpires: Date,
   boardsIds: [{
     type: Schema.Types.ObjectId,
     ref: 'Board',

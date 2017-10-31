@@ -7,7 +7,6 @@ import members from './members'
 
 const router = express.Router()
 
-router.use('/register', register)
 router.use('/boards', boards)
 router.use('/lists', lists)
 router.use('/cards', cards)
