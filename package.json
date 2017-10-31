@@ -5,7 +5,7 @@
     "dev": "babel-watch src/server.js",
     "start": "npm run clean && npm run build && npm run serve",
     "clean": "rm -rf build && mkdir build",
-    "build": "babel -d ./build ./src -s",
+    "build": "babel -d ./build ./src -s --copy-files",
     "serve": "node ./build/server.js",
     "lint": "eslint **/*.js --ignore-pattern node_modules/"
   },
