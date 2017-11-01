@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 router.get('/:id/lists/', (req, res) => {
   List.find({ boardId: req.params.id }, (err, lists) => {
     if (err) {
-      res.send(err)
+      res.sendStatus(404)
     } else {
       res.json(lists)
     }
@@ -29,7 +29,7 @@ router.get('/:id/lists/', (req, res) => {
 router.get('/:id', (req, res) => {
   Board.findOne({ _id: req.params.id }, (err, board) => {
     if (err) {
-      res.send(err)
+      res.sendStatus(404)
     } else {
       res.json(board)
     }
