@@ -15,6 +15,7 @@ router.get('/:id/cards/', (req, res) => {
     .populate('labels')
     .populate('assignees')
     .populate('cardResponsible')
+    .populate('comments')
     .exec()
 })
 
@@ -27,6 +28,7 @@ router.post('/:id/cards/', (req, res) => {
     dueComplete: null,
     labels: [],
     assignees: [],
+    comments: [],
   })
   card.save((err, newCard) => {
     if (err) {
