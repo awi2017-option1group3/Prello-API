@@ -16,6 +16,7 @@ router.post('/', (req, res) => {
       companyName: req.body.companyName,
       appName: req.body.appName,
       password: req.body.password,
+      redirectUri: req.body.redirectUri,
       message: 'You must provide a company name.',
     })
   } else if (req.body.companyName.length < 3 || req.body.companyName.length > 18) {
@@ -23,6 +24,7 @@ router.post('/', (req, res) => {
       companyName: req.body.companyName,
       appName: req.body.appName,
       password: req.body.password,
+      redirectUri: req.body.redirectUri,
       message: "Your company name's length must be between 3 and 18 characters.",
     })
   } else if (!req.body.appName) {
@@ -30,6 +32,7 @@ router.post('/', (req, res) => {
       companyName: req.body.companyName,
       appName: req.body.appName,
       password: req.body.password,
+      redirectUri: req.body.redirectUri,
       message: 'You must provide an application name. ',
     })
   } else if (req.body.appName.length < 3 || req.body.appName.length > 18) {
@@ -37,6 +40,7 @@ router.post('/', (req, res) => {
       companyName: req.body.companyName,
       appName: req.body.appName,
       password: req.body.password,
+      redirectUri: req.body.redirectUri,
       message: "Your application name's length must be between 3 and 18 characters.",
     })
   } else if (!req.body.password) {
@@ -44,7 +48,16 @@ router.post('/', (req, res) => {
       companyName: req.body.companyName,
       appName: req.body.appName,
       password: req.body.password,
+      redirectUri: req.body.redirectUri,
       message: 'You must provide a password. ',
+    })
+  } else if (!req.body.redirectUri) {
+    res.render('clientRegister', {
+      companyName: req.body.companyName,
+      appName: req.body.appName,
+      password: req.body.password,
+      redirectUri: req.body.redirectUri,
+      message: 'You must provide a callback URL. ',
     })
   } else {
     const clientId = `${req.body.companyName}_${req.body.appName}`
@@ -55,6 +68,7 @@ router.post('/', (req, res) => {
             companyName: req.body.companyName,
             appName: '',
             password: req.body.password,
+            redirectUri: req.body.redirectUri,
             message: `An account for the client ${clientId} already exists, please use the provided keys or create another client account with another application name.`,
           })
         } else {
@@ -65,6 +79,7 @@ router.post('/', (req, res) => {
         const client = new Client({
           clientId,
           clientSecret: secret,
+          redirectUri: req.body.redirectUri,
         })
         return client.save()
       })
@@ -72,6 +87,7 @@ router.post('/', (req, res) => {
         res.render('clientResult', {
           clientId: client.clientId,
           clientSecret: client.clientSecret,
+          redirectUri: client.redirectUri,
         })
       })
   }
