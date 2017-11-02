@@ -77,7 +77,7 @@ router.post('/:id/labels/', (req, res) => {
 router.post('/:id/lists/', (req, res) => {
   const list = new List({
     title: req.body.title,
-    rank: req.body.rank,
+    pos: req.body.pos,
     boardId: req.params.id,
   })
   list.save((err, newList) => {
