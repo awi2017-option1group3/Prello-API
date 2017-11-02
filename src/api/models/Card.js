@@ -6,6 +6,10 @@ const cardSchema = new Schema({
   title: {
     type: String,
   },
+  desc: {
+    type: String,
+    default: "",
+  },
   dueComplete: {
     type: Date,
   },

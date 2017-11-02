@@ -119,6 +119,7 @@ router.put('/:cardId', (req, res) => {
     ...typeof req.body.labels !== 'undefined' && { labels: req.body.labels },
     ...typeof req.body.assignees !== 'undefined' && { assignees: req.body.assignees },
     ...typeof req.body.cardResponsible !== 'undefined' && { cardResponsible: req.body.cardResponsible },
+    ...typeof req.body.desc !== 'undefined' && { desc: req.body.desc },
   }
   Card.update({ _id: req.params.cardId }, data, {})
     .catch(err => res.send(err))
