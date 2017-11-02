@@ -22,6 +22,7 @@ router.get('/:id/cards/', (req, res) => {
 router.post('/:id/cards/', (req, res) => {
   const card = new Card({
     title: req.body.title,
+    desc: req.body.desc,
     rank: req.body.rank,
     listId: req.params.id,
     cardResponsible: null,
