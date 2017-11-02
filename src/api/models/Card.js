@@ -9,7 +9,7 @@ const cardSchema = new Schema({
   dueComplete: {
     type: Date,
   },
-  rank: {
+  pos: {
     type: Number,
   },
   listId: {

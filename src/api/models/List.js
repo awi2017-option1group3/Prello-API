@@ -6,7 +6,7 @@ const listSchema = new Schema({
   title: {
     type: String,
   },
-  rank: {
+  pos: {
     type: Number,
   },
   boardId: {

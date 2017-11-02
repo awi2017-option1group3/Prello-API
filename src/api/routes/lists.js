@@ -22,7 +22,7 @@ router.get('/:id/cards/', (req, res) => {
 router.post('/:id/cards/', (req, res) => {
   const card = new Card({
     title: req.body.title,
-    rank: req.body.rank,
+    pos: req.body.pos,
     listId: req.params.id,
     cardResponsible: null,
     dueComplete: null,
@@ -41,7 +41,7 @@ router.post('/:id/cards/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   const data = {
-    ...typeof req.body.rank !== 'undefined' && { rank: parseInt(req.body.rank, 10) },
+    ...typeof req.body.pos !== 'undefined' && { pos: parseInt(req.body.pos, 10) },
     ...typeof req.body.title !== 'undefined' && { title: req.body.title },
   }
   List.update({ _id: req.params.id }, data, {})
