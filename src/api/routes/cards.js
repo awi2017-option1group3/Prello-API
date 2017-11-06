@@ -10,6 +10,16 @@ router.delete('/:cardId', (req, res) => {
     .then(() => res.end())
 })
 
+router.get('/:cardId/', (req, res) => {
+  Card.findOne({ _id: req.params.cardId }, (err, card) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(card)
+    }
+  })
+})
+
 router.get('/:cardId/labels/', (req, res) => {
   Card.findOne({ _id: req.params.cardId }, (err, card) => {
     if (err) {
@@ -33,7 +43,7 @@ router.get('/:cardId/comments/', (req, res) => {
     .exec()
 })
 
-router.get('/:cardId/members/', (req, res) => {
+router.get('/:cardId/assignees/', (req, res) => {
   Card.findOne({ _id: req.params.cardId }, (err, card) => {
     if (err) {
       res.send(err)
@@ -78,7 +88,7 @@ router.post('/:cardId/labels/', (req, res) => {
   cardUpdate(req.params.cardId, update, res)
 })
 
-router.post('/:cardId/members/', (req, res) => {
+router.post('/:cardId/assignees/', (req, res) => {
   const update = {
     $push:
       { assignees: req.body.memberId },
