@@ -143,4 +143,21 @@ router.put('/:cardId', (req, res) => {
     .then(cardUpdated => res.json(cardUpdated))
 })
 
+router.delete('/:cardId/assignees/:memberId', (req, res) => {
+  let assigneesToUpdate
+  Card.findOne({ _id: req.params.cardId }, (err, card) => {
+    if (err) {
+      res.send(err)
+    } else {
+      assigneesToUpdate = card.assignees
+    }
+    assigneesToUpdate = assigneesToUpdate.filter(item => item.toString() !== req.params.memberId)
+    const update = {
+      $set:
+        { assignees: assigneesToUpdate },
+    }
+    cardUpdate(req.params.cardId, update, res)
+  })
+})
+
 export default router
