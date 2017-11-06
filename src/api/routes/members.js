@@ -24,4 +24,14 @@ router.get('/initials/:initials', (req, res) => {
   })
 })
 
+router.get('/', (req, res) => {
+  User.find({}, (err, boards) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(boards)
+    }
+  })
+})
+
 export default router
