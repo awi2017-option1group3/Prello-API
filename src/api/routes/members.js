@@ -25,11 +25,11 @@ router.get('/initials/:initials', (req, res) => {
 })
 
 router.get('/', (req, res) => {
-  User.find({}, (err, boards) => {
+  User.find({}, (err, users) => {
     if (err) {
       res.send(err)
     } else {
-      res.json(boards)
+      res.json(users)
     }
   })
 })
