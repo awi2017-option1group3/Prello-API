@@ -160,4 +160,21 @@ router.delete('/:cardId/assignees/:memberId', (req, res) => {
   })
 })
 
+router.delete('/:cardId/labels/:labelId', (req, res) => {
+  let labelsToUpdate
+  Card.findOne({ _id: req.params.cardId }, (err, card) => {
+    if (err) {
+      res.send(err)
+    } else {
+      labelsToUpdate = card.labels
+    }
+    labelsToUpdate = labelsToUpdate.filter(item => item.toString() !== req.params.labelId)
+    const update = {
+      $set:
+        { labels: labelsToUpdate },
+    }
+    cardUpdate(req.params.cardId, update, res)
+  })
+})
+
 export default router
