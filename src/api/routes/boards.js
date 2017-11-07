@@ -110,10 +110,10 @@ router.delete('/:boardId', (req, res) => {
         if (err) {
           res.send(err)
         } else {
-          lists.forEach(list => {
+          lists.forEach((list) => {
             Card.remove({ listId: list.id })
             list.remove()
-          }, this);
+          }, this)
         }
       })   
     })
