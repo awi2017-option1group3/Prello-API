@@ -65,19 +65,30 @@ router.get('/:cardId/responsible/', (req, res) => {
     .exec()
 })
 
-const cardUpdate = (cardId, update, res) => {
-  Card.findOneAndUpdate(
-    { _id: cardId },
-    update,
-    { safe: true, upsert: true },
-    (err, cardUpdated) => {
-      if (err) {
-        res.send(err)
-      } else {
-        res.json(cardUpdated)
-      }
-    },
-  )
+const cardUpdate = (cardId, update, populatePath, populateModel, res) => {
+  if (cardId.match(/^[0-9a-fA-F]{24}$/)) {
+    Card.findOneAndUpdate(
+      { _id: cardId },
+      update,
+      { safe: true, upsert: true, new: true },
+      (err, cardUpdated) => {
+        if (err) {
+          res.send(err)
+        } else {
+          Card.populate(cardUpdated, {
+            path: populatePath,
+            model: populateModel,
+          }, (err2, cardUpdated2) => {
+            if (err) {
+              res.send(err2)
+            } else {
+              res.json(cardUpdated2)
+            }
+          })
+        }
+      },
+    )
+  }
 }
 
 router.post('/:cardId/labels/', (req, res) => {
@@ -85,7 +96,7 @@ router.post('/:cardId/labels/', (req, res) => {
     $push:
     { labels: req.body.labelId },
   }
-  cardUpdate(req.params.cardId, update, res)
+  cardUpdate(req.params.cardId, update, 'labels', 'Label', res)
 })
 
 router.post('/:cardId/assignees/', (req, res) => {
@@ -93,7 +104,7 @@ router.post('/:cardId/assignees/', (req, res) => {
     $push:
       { assignees: req.body.memberId },
   }
-  cardUpdate(req.params.cardId, update, res)
+  cardUpdate(req.params.cardId, update, 'assignees', 'User', res)
 })
 
 router.post('/:cardId/responsible/', (req, res) => {
@@ -101,7 +112,7 @@ router.post('/:cardId/responsible/', (req, res) => {
     $set:
       { cardResponsible: req.body.responsibleId },
   }
-  cardUpdate(req.params.cardId, update, res)
+  cardUpdate(req.params.cardId, update, 'responsible', 'User', res)
 })
 
 router.post('/:cardId/comments/', (req, res) => {
@@ -116,7 +127,7 @@ router.post('/:cardId/comments/', (req, res) => {
         $push:
           { comments: newComment.id },
       }
-      cardUpdate(req.params.cardId, update, res)
+      cardUpdate(req.params.cardId, update, 'comments', 'Comment', res)
     })
 })
 
@@ -131,7 +142,7 @@ router.put('/:cardId', (req, res) => {
     ...typeof req.body.cardResponsible !== 'undefined' && { cardResponsible: req.body.cardResponsible },
     ...typeof req.body.desc !== 'undefined' && { desc: req.body.desc },
   }
-  Card.update({ _id: req.params.cardId }, data, {})
+  Card.update({ _id: req.params.cardId }, data, { new: true })
     .catch(err => res.send(err))
     .then(() => Card.findOne({ _id: req.params.cardId })
       .populate('labels')
@@ -156,7 +167,7 @@ router.delete('/:cardId/assignees/:memberId', (req, res) => {
       $set:
         { assignees: assigneesToUpdate },
     }
-    cardUpdate(req.params.cardId, update, res)
+    cardUpdate(req.params.cardId, update, 'assignees', 'User', res)
   })
 })
 
@@ -173,7 +184,7 @@ router.delete('/:cardId/labels/:labelId', (req, res) => {
       $set:
         { labels: labelsToUpdate },
     }
-    cardUpdate(req.params.cardId, update, res)
+    cardUpdate(req.params.cardId, update, 'labels', 'Label', res)
   })
 })
 
