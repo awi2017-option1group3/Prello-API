@@ -82,7 +82,7 @@ const cardUpdate = (cardId, update, populatePath, populateModel, res) => {
             if (err) {
               res.send(err2)
             } else {
-              res.json(cardUpdated2)
+              res.json(cardUpdated2[populatePath])
             }
           })
         }
