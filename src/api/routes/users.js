@@ -1,7 +1,10 @@
 import express from 'express'
 import User from '../models/User'
+import Board from '../models/Board'
 
 const router = express.Router()
+
+// User
 
 router.get('/', (req, res) => {
   User.find({}, (err, users) => {
@@ -13,8 +16,8 @@ router.get('/', (req, res) => {
   })
 })
 
-router.get('/:id', (req, res) => {
-  User.find({ _id: req.params.id }, (err, boards) => {
+router.get('/:userId', (req, res) => {
+  User.find({ _id: req.params.userId }, (err, boards) => {
     if (err) {
       res.send(err)
     } else {
@@ -32,6 +35,39 @@ router.get('/initials/:initials', (req, res) => {
       res.json(members)
     }
   })
+})
+
+// Boards
+
+router.get('/:userId/boards/', (req, res) => {
+  User.findOne({ _id: req.params.userId }, (err, user) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(user.boards)
+    }
+  }).populate('boards')
+    .exec()
+})
+
+router.post('/:userId/boards/', (req, res) => {
+  const board = new Board({
+    title: req.body.title,
+  })
+  Board.create(board)
+    .then((newBoard) => {
+      const update = {
+        $push:
+          { boards: newBoard.id },
+      }
+      User.findOneAndUpdate({ _id: req.params.userId }, update, { safe: true, upsert: true }, (err) => {
+        if (err) {
+          res.send(err)
+        } else {
+          res.json(newBoard)
+        }
+      })
+    })
 })
 
 export default router

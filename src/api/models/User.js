@@ -31,7 +31,7 @@ const userSchema = new Schema({
   },
   passwordResetToken: String,
   resetTokenExpires: Date,
-  boardsIds: [{
+  boards: [{
     type: Schema.Types.ObjectId,
     ref: 'Board',
   }],
@@ -43,7 +43,7 @@ userSchema.set('toJSON', {
     delete ret._id
     delete ret.__v
     delete ret.password
-    delete ret.boardsIds
+    delete ret.boards
   },
 })
 
