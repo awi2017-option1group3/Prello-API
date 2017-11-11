@@ -147,7 +147,7 @@ router.post('/:cardId/attachments/', (req, res) => {
   const attachment = new Attachment({
     name: req.body.name,
     desc: req.body.desc,
-    id: req.body.attachmentId,
+    driveId: req.body.attachmentId,
     url: req.body.attachmentUrl,
     icon: req.body.attachmentIcon,
     lastEditedTime: req.body.lastEditedTime,
@@ -231,7 +231,7 @@ router.delete('/:cardId/attachments/:attachmentId', (req, res) => {
     attachmentsToUpdate = attachmentsToUpdate.filter(item => item.toString() !== req.params.attachmentId)
     const update = {
       $set:
-        { labels: attachmentsToUpdate },
+        { attachments: attachmentsToUpdate },
     }
     cardUpdate(req.params.cardId, update, 'attachments', 'Attachment', res)
   })

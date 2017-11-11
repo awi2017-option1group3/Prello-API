@@ -10,7 +10,7 @@ const attachmentSchema = new Schema({
     type: String,
     default: "",
   },
-  id: {
+  driveId: {
     type: String,
   },
   url: {
