@@ -6,6 +6,14 @@ const boardSchema = new Schema({
   title: {
     type: String,
   },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  contributors: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  }],
   listsIds: [{
     type: Schema.Types.ObjectId,
     ref: 'List',

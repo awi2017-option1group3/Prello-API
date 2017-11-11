@@ -53,12 +53,14 @@ router.get('/:userId/boards/', (req, res) => {
 router.post('/:userId/boards/', (req, res) => {
   const board = new Board({
     title: req.body.title,
+    owner: req.params.userId,
   })
   Board.create(board)
     .then((newBoard) => {
       const update = {
-        $push:
-          { boards: newBoard.id },
+        $push: {
+          boards: newBoard.id,
+        },
       }
       User.findOneAndUpdate({ _id: req.params.userId }, update, { safe: true, upsert: true }, (err) => {
         if (err) {
@@ -68,6 +70,19 @@ router.post('/:userId/boards/', (req, res) => {
         }
       })
     })
+})
+
+// Contributing boards
+
+router.get('/:userId/contributingBoards/', (req, res) => {
+  User.findOne({ _id: req.params.userId }, (err, user) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(user.contributingBoards)
+    }
+  }).populate('contributingBoards')
+    .exec()
 })
 
 export default router
