@@ -20,6 +20,20 @@ router.get('/:cardId/', (req, res) => {
   })
 })
 
+router.get('/:cardId/populated/', (req, res) => {
+  Card.findOne({ _id: req.params.cardId }, (err, card) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(card)
+    }
+  }).populate('labels')
+    .populate('assignees')
+    .populate('cardResponsible')
+    .populate('comments')
+    .exec()
+})
+
 router.get('/:cardId/labels/', (req, res) => {
   Card.findOne({ _id: req.params.cardId }, (err, card) => {
     if (err) {
