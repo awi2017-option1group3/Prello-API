@@ -112,7 +112,7 @@ router.post('/:cardId/responsible/', (req, res) => {
     $set:
       { cardResponsible: req.body.responsibleId },
   }
-  cardUpdate(req.params.cardId, update, 'responsible', 'User', res)
+  cardUpdate(req.params.cardId, update, 'cardResponsible', 'User', res)
 })
 
 router.post('/:cardId/comments/', (req, res) => {
@@ -186,6 +186,14 @@ router.delete('/:cardId/labels/:labelId', (req, res) => {
     }
     cardUpdate(req.params.cardId, update, 'labels', 'Label', res)
   })
+})
+
+router.delete('/:cardId/responsible/', (req, res) => {
+  const update = {
+    $set:
+      { cardResponsible: '' },
+  }
+  cardUpdate(req.params.cardId, update, 'cardResponsible', 'User', res)
 })
 
 export default router
