@@ -36,6 +36,10 @@ const cardSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Comment',
   }],
+  attachments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Attachment',
+  }],
 })
 
 cardSchema.set('toJSON', {
