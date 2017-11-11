@@ -191,7 +191,7 @@ router.delete('/:cardId/labels/:labelId', (req, res) => {
 router.delete('/:cardId/responsible/', (req, res) => {
   const update = {
     $set:
-      { cardResponsible: '' },
+      { cardResponsible: null },
   }
   cardUpdate(req.params.cardId, update, 'cardResponsible', 'User', res)
 })
