@@ -35,6 +35,10 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Board',
   }],
+  contributingBoards: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Board',
+  }],
 })
 
 userSchema.set('toJSON', {
