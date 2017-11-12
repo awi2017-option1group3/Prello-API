@@ -29,7 +29,7 @@ router.get('/:cardId/populated/', (req, res) => {
     }
   }).populate('labels')
     .populate('assignees')
-    .populate('cardResponsible')
+    .populate('responsible')
     .populate('comments')
     .exec()
 })
@@ -73,9 +73,9 @@ router.get('/:cardId/responsible/', (req, res) => {
     if (err) {
       res.send(err)
     } else {
-      res.json(card.cardResponsible)
+      res.json(card.responsible)
     }
-  }).populate('cardResponsible')
+  }).populate('responsible')
     .exec()
 })
 
@@ -124,9 +124,9 @@ router.post('/:cardId/assignees/', (req, res) => {
 router.post('/:cardId/responsible/', (req, res) => {
   const update = {
     $set:
-      { cardResponsible: req.body.responsibleId },
+      { responsible: req.body.responsibleId },
   }
-  cardUpdate(req.params.cardId, update, 'cardResponsible', 'User', res)
+  cardUpdate(req.params.cardId, update, 'responsible', 'User', res)
 })
 
 router.post('/:cardId/comments/', (req, res) => {
@@ -153,7 +153,7 @@ router.put('/:cardId', (req, res) => {
     ...typeof req.body.dueComplete !== 'undefined' && { dueComplete: req.body.dueComplete },
     ...typeof req.body.labels !== 'undefined' && { labels: req.body.labels },
     ...typeof req.body.assignees !== 'undefined' && { assignees: req.body.assignees },
-    ...typeof req.body.cardResponsible !== 'undefined' && { cardResponsible: req.body.cardResponsible },
+    ...typeof req.body.responsible !== 'undefined' && { responsible: req.body.responsible },
     ...typeof req.body.desc !== 'undefined' && { desc: req.body.desc },
   }
   Card.update({ _id: req.params.cardId }, data, { new: true })
@@ -161,7 +161,7 @@ router.put('/:cardId', (req, res) => {
     .then(() => Card.findOne({ _id: req.params.cardId })
       .populate('labels')
       .populate('assignees')
-      .populate('cardResponsible')
+      .populate('responsible')
       .populate('comments')
       .exec())
     .catch(err => res.send(err))
@@ -205,9 +205,9 @@ router.delete('/:cardId/labels/:labelId', (req, res) => {
 router.delete('/:cardId/responsible/', (req, res) => {
   const update = {
     $set:
-      { cardResponsible: null },
+      { responsible: null },
   }
-  cardUpdate(req.params.cardId, update, 'cardResponsible', 'User', res)
+  cardUpdate(req.params.cardId, update, 'responsible', 'User', res)
 })
 
 export default router
