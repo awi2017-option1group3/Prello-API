@@ -14,7 +14,7 @@ router.get('/:id/cards/', (req, res) => {
   })
     .populate('labels')
     .populate('assignees')
-    .populate('cardResponsible')
+    .populate('responsible')
     .populate('comments')
     .exec()
 })
@@ -25,7 +25,7 @@ router.post('/:id/cards/', (req, res) => {
     desc: req.body.desc,
     pos: req.body.pos,
     listId: req.params.id,
-    cardResponsible: null,
+    responsible: null,
     dueComplete: null,
     labels: [],
     assignees: [],

@@ -28,7 +28,7 @@ const cardSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   }],
-  cardResponsible: {
+  responsible: {
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
