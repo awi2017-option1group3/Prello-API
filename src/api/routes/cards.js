@@ -153,13 +153,16 @@ router.post('/:cardId/attachments/', (req, res) => {
     lastEditedTime: req.body.lastEditedTime,
     cardId: req.params.cardId,
   })
-  Attachment.create(attachment)
+  Attachment
+    .create(attachment)
     .then((newAttachment) => {
       const update = {
         $push:
           { attachments: newAttachment.id },
       }
-      cardUpdate(req.params.cardId, update, 'attachments', 'Attachment', res)
+      Card
+        .findOneAndUpdate({ _id: req.params.cardId }, update, { safe: true, upsert: true, new: true }).exec()
+        .then(() => res.json(newAttachment))
     })
 })
 
