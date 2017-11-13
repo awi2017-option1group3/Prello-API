@@ -27,34 +27,40 @@ router.post('/', (req, res) => {
   User.findOne({ email: req.body.email }).exec()
     .catch(err => res.send(err))
     .then((user) => {
-      const forgotPassword = new ForgotPassword({
-        token: tokenKey,
-        userId: user.id,
-        timeOut: now,
-      })
-      forgotPassword.save((err) => {
-        if (err) {
-          res.send(err)
-        } else {
-          res.status(200)
-          const mailOptions = {
-            from: '"Prello by Gluon" <forgotpassword@prello-by-gluon.com>', // sender address
-            to: req.body.email, // list of receivers
-            subject: 'Forgot password Prello by Gluon ', // Subject line
-            text: `Hi ${user.fullName} !` +
-            'follow this link to reset your password: ' +
-            `http://localhost:3000/forgotPassword/${tokenUrl}`, // plain text body
-            html: `<div><h3>Hi ${user.fullName} !</h3> <p>follow this link to reset your password:</p> <p>http://localhost:3000/forgotPassword/${tokenUrl} </p></div>`, // html body
-          }
-
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              return console.log(error)
+      if (user) {
+        const forgotPassword = new ForgotPassword({
+          token: tokenKey,
+          userId: user.id,
+          timeOut: now,
+        })
+        forgotPassword.save((err) => {
+          if (err) {
+            res.send(err)
+          } else {
+            res.status(200)
+            const mailOptions = {
+              from: '"Prello by Gluon" <prello+forgotpassword@gmail.com>', // sender address
+              to: req.body.email, // list of receivers
+              subject: 'Forgot password Prello by Gluon ', // Subject line
+              text: `Hi ${user.fullName} !` +
+              'follow this link to reset your password: ' +
+              `https://prello-by-gluon.herokuapp.com/forgotPassword/${tokenUrl}` +
+              `Prello Team by Gluon`, // plain text body
+              html: `<div><h3>Hi ${user.fullName} !</h3> <p>follow this link to reset your password:</p> 
+            <p>https://prello-by-gluon.herokuapp.com/forgotPassword/${tokenUrl} </p><p>Prello Team by Gluon</p></div>`, // html body
             }
-            console.log('Message %s sent: %s', info.messageId, info.response)
-          })
-        }
-      })
+
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                return console.log(error)
+              }
+              console.log('Message %s sent: %s', info.messageId, info.response)
+            })
+          }
+        })
+      }else {
+        res.status(404)
+      }
     })
 })
 
