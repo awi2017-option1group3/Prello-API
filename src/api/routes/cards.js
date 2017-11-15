@@ -34,6 +34,13 @@ router.get('/:cardId/populated/', (req, res) => {
     .populate('responsible')
     .populate('comments')
     .populate('taskLists')
+    .populate({
+      path: 'taskLists',
+      model: 'TaskList',
+      populate: {
+        path: 'tasks',
+        model: 'Task',
+    }
     .exec()
 })
 
