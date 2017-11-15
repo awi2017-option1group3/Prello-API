@@ -1,6 +1,7 @@
 import express from 'express'
 import User from '../models/User'
 import Board from '../models/Board'
+import Notification from '../models/Notification'
 
 const router = express.Router()
 
@@ -83,6 +84,62 @@ router.get('/:userId/contributingBoards/', (req, res) => {
     }
   }).populate('contributingBoards')
     .exec()
+})
+
+// Notifications
+
+router.get('/:userId/notifications/', (req, res) => {
+  User.findOne({ _id: req.params.userId }, (err, user) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(user.notifications)
+    }
+  }).populate({
+    path: 'notifications',
+    model: 'Notification',
+    populate: [{
+      path: 'board',
+      model: 'Board',
+    }, {
+      path: 'targetUser',
+      model: 'User',
+    }, {
+      path: 'sourceUser',
+      model: 'User',
+    }],
+  }).exec()
+})
+
+router.post('/:userId/notifications/', (req, res) => {
+  const notification = new Notification({
+    message: req.body.message,
+    occuredAt: new Date(),
+    isRead: false,
+    board: req.body.boardId,
+    sourceUser: req.body.sourceUserId,
+    targetUser: req.params.userId,
+  })
+  Notification.create(notification)
+    .then((newNotification) => {
+      const update = {
+        $push: {
+          notifications: newNotification.id,
+        },
+      }
+      User.findOneAndUpdate({ _id: req.params.userId }, update, { safe: true, upsert: true }, (err1) => {
+        if (err1) {
+          res.send(err1)
+        } else {
+          Notification.findOne({ _id: newNotification.id })
+            .populate('board')
+            .populate('sourceUser')
+            .populate('targetUser')
+            .exec()
+            .then(notificationPopulated => res.json(notificationPopulated))
+        }
+      })
+    })
 })
 
 export default router
