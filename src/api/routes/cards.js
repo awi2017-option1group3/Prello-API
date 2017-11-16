@@ -1,6 +1,7 @@
 import express from 'express'
 import Card from '../models/Card'
 import Comment from '../models/Comment'
+import Attachment from '../models/Attachment'
 import TaskList from '../models/TaskList'
 import Task from '../models/Task'
 
@@ -107,12 +108,23 @@ router.get('/:cardId/responsible/', (req, res) => {
     .exec()
 })
 
+router.get('/:cardId/attachments/', (req, res) => {
+  Card.findOne({ _id: req.params.cardId }, (err, card) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(card.attachments)
+    }
+  }).populate('attachments')
+    .exec()
+})
+
 const cardUpdate = (cardId, update, populatePath, populateModel, res) => {
   if (cardId.match(/^[0-9a-fA-F]{24}$/)) {
     Card.findOneAndUpdate(
       { _id: cardId },
       update,
-      { safe: true, upsert: true, new : true },
+      { safe: true, upsert: true, new: true },
       (err, cardUpdated) => {
         if (err) {
           res.send(err)
@@ -173,6 +185,29 @@ router.post('/:cardId/comments/', (req, res) => {
     })
 })
 
+router.post('/:cardId/attachments/', (req, res) => {
+  const attachment = new Attachment({
+    name: req.body.name,
+    desc: req.body.desc,
+    driveId: req.body.attachmentId,
+    url: req.body.attachmentUrl,
+    icon: req.body.attachmentIcon,
+    lastEditedTime: req.body.lastEditedTime,
+    cardId: req.params.cardId,
+  })
+  Attachment
+    .create(attachment)
+    .then((newAttachment) => {
+      const update = {
+        $push:
+          { attachments: newAttachment.id },
+      }
+      Card
+        .findOneAndUpdate({ _id: req.params.cardId }, update, { safe: true, upsert: true, new: true }).exec()
+        .then(() => res.json(newAttachment))
+    })
+})
+
 router.post('/:cardId/tasklists/', (req, res) => {
   const taskList = new TaskList({
     title: req.body.title,
@@ -221,7 +256,6 @@ router.delete('/:cardId/assignees/:memberId', (req, res) => {
   cardUpdate(req.params.cardId, update, 'assignees', 'User', res)
 })
 
-
 router.delete('/:cardId/labels/:labelId', (req, res) => {
   let labelsToUpdate
   Card.findOne({ _id: req.params.cardId }, (err, card) => {
@@ -236,6 +270,23 @@ router.delete('/:cardId/labels/:labelId', (req, res) => {
         { labels: labelsToUpdate },
     }
     cardUpdate(req.params.cardId, update, 'labels', 'Label', res)
+  })
+})
+
+router.delete('/:cardId/attachments/:attachmentId', (req, res) => {
+  let attachmentsToUpdate
+  Card.findOne({ _id: req.params.cardId }, (err, card) => {
+    if (err) {
+      res.send(err)
+    } else {
+      attachmentsToUpdate = card.attachments
+    }
+    attachmentsToUpdate = attachmentsToUpdate.filter(item => item.toString() !== req.params.attachmentId)
+    const update = {
+      $set:
+        { attachments: attachmentsToUpdate },
+    }
+    cardUpdate(req.params.cardId, update, 'attachments', 'Attachment', res)
   })
 })
 
