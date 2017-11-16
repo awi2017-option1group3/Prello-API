@@ -5,7 +5,6 @@ import mongoose from 'mongoose'
 import oAuthServer from 'node-oauth2-server'
 import path from 'path'
 
-
 import {} from './envLoader'
 import authRouter from './auth/routes/index'
 import apiRouter from './api/routes/index'
