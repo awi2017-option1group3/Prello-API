@@ -4,6 +4,8 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import oAuthServer from 'node-oauth2-server'
 import path from 'path'
+
+import {} from './envLoader'
 import authRouter from './auth/routes/index'
 import apiRouter from './api/routes/index'
 import registerRouter from './api/routes/register'
@@ -12,6 +14,7 @@ import authService from './auth/services/auth'
 const app = express()
 const port = process.env.PORT || 8000
 const db = process.env.MONGODB_URI || 'mongodb://localhost/prello'
+
 
 mongoose.Promise = global.Promise
 mongoose.connect(db, { useMongoClient: true })

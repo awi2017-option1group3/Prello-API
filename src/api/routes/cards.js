@@ -2,6 +2,8 @@ import express from 'express'
 import Card from '../models/Card'
 import Comment from '../models/Comment'
 import Attachment from '../models/Attachment'
+import TaskList from '../models/TaskList'
+import Task from '../models/Task'
 
 const router = express.Router({ mergeParams: true })
 
@@ -21,6 +23,29 @@ router.get('/:cardId/', (req, res) => {
   })
 })
 
+router.get('/:cardId/populated/', (req, res) => {
+  Card.findOne({ _id: req.params.cardId }, (err, card) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(card)
+    }
+  }).populate('labels')
+    .populate('assignees')
+    .populate('responsible')
+    .populate('comments')
+    .populate('taskLists')
+    .populate({
+      path: 'taskLists',
+      model: 'TaskList',
+      populate: {
+        path: 'tasks',
+        model: 'Task',
+      },
+    })
+    .exec()
+})
+
 router.get('/:cardId/labels/', (req, res) => {
   Card.findOne({ _id: req.params.cardId }, (err, card) => {
     if (err) {
@@ -30,6 +55,23 @@ router.get('/:cardId/labels/', (req, res) => {
     }
   }).populate('labels')
     .exec()
+})
+
+router.get('/:cardId/tasklists/', (req, res) => {
+  Card.findOne({ _id: req.params.cardId }, (err, card) => {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(card.taskLists)
+    }
+  }).populate({
+    path: 'taskLists',
+    model: 'TaskList',
+    populate: {
+      path: 'tasks',
+      model: 'Task',
+    },
+  }).exec()
 })
 
 router.get('/:cardId/comments/', (req, res) => {
@@ -60,9 +102,9 @@ router.get('/:cardId/responsible/', (req, res) => {
     if (err) {
       res.send(err)
     } else {
-      res.json(card.cardResponsible)
+      res.json(card.responsible)
     }
-  }).populate('cardResponsible')
+  }).populate('responsible')
     .exec()
 })
 
@@ -122,7 +164,7 @@ router.post('/:cardId/assignees/', (req, res) => {
 router.post('/:cardId/responsible/', (req, res) => {
   const update = {
     $set:
-      { cardResponsible: req.body.responsibleId },
+      { responsible: req.body.responsibleId },
   }
   cardUpdate(req.params.cardId, update, 'responsible', 'User', res)
 })
@@ -166,6 +208,22 @@ router.post('/:cardId/attachments/', (req, res) => {
     })
 })
 
+router.post('/:cardId/tasklists/', (req, res) => {
+  const taskList = new TaskList({
+    title: req.body.title,
+    tasks: [],
+    cardId: req.params.cardId,
+  })
+  TaskList.create(taskList)
+    .then((newTaskList) => {
+      const update = {
+        $push:
+          { taskLists: newTaskList.id },
+      }
+      cardUpdate(req.params.cardId, update, 'taskLists', 'TaskList', res)
+    })
+})
+
 router.put('/:cardId', (req, res) => {
   const data = {
     ...typeof req.body.title !== 'undefined' && { title: req.body.title },
@@ -174,7 +232,7 @@ router.put('/:cardId', (req, res) => {
     ...typeof req.body.dueComplete !== 'undefined' && { dueComplete: req.body.dueComplete },
     ...typeof req.body.labels !== 'undefined' && { labels: req.body.labels },
     ...typeof req.body.assignees !== 'undefined' && { assignees: req.body.assignees },
-    ...typeof req.body.cardResponsible !== 'undefined' && { cardResponsible: req.body.cardResponsible },
+    ...typeof req.body.responsible !== 'undefined' && { responsible: req.body.responsible },
     ...typeof req.body.desc !== 'undefined' && { desc: req.body.desc },
   }
   Card.update({ _id: req.params.cardId }, data, { new: true })
@@ -182,7 +240,7 @@ router.put('/:cardId', (req, res) => {
     .then(() => Card.findOne({ _id: req.params.cardId })
       .populate('labels')
       .populate('assignees')
-      .populate('cardResponsible')
+      .populate('responsible')
       .populate('comments')
       .exec())
     .catch(err => res.send(err))
@@ -190,20 +248,12 @@ router.put('/:cardId', (req, res) => {
 })
 
 router.delete('/:cardId/assignees/:memberId', (req, res) => {
-  let assigneesToUpdate
-  Card.findOne({ _id: req.params.cardId }, (err, card) => {
-    if (err) {
-      res.send(err)
-    } else {
-      assigneesToUpdate = card.assignees
-    }
-    assigneesToUpdate = assigneesToUpdate.filter(item => item.toString() !== req.params.memberId)
-    const update = {
-      $set:
-        { assignees: assigneesToUpdate },
-    }
-    cardUpdate(req.params.cardId, update, 'assignees', 'User', res)
-  })
+  const update = {
+    $pull: {
+      contributors: req.params.memberId,
+    },
+  }
+  cardUpdate(req.params.cardId, update, 'assignees', 'User', res)
 })
 
 router.delete('/:cardId/labels/:labelId', (req, res) => {
@@ -238,6 +288,14 @@ router.delete('/:cardId/attachments/:attachmentId', (req, res) => {
     }
     cardUpdate(req.params.cardId, update, 'attachments', 'Attachment', res)
   })
+})
+
+router.delete('/:cardId/responsible/', (req, res) => {
+  const update = {
+    $set:
+      { responsible: null },
+  }
+  cardUpdate(req.params.cardId, update, 'responsible', 'User', res)
 })
 
 export default router

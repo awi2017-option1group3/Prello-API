@@ -28,7 +28,7 @@ const cardSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   }],
-  cardResponsible: {
+  responsible: {
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
@@ -39,6 +39,10 @@ const cardSchema = new Schema({
   attachments: [{
     type: Schema.Types.ObjectId,
     ref: 'Attachment',
+  }],
+  taskLists: [{
+    type: Schema.Types.ObjectId,
+    ref: 'TaskList',
   }],
 })
 
