@@ -40,7 +40,8 @@ router.get('/:cardId/populated/', (req, res) => {
       populate: {
         path: 'tasks',
         model: 'Task',
-    }
+      },
+    })
     .exec()
 })
 

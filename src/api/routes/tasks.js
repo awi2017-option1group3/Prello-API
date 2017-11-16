@@ -19,4 +19,14 @@ router.delete('/:taskId', (req, res) => {
     .then(() => res.end())
 })
 
+router.put('/:taskId', (req, res) => {
+  const data = {
+    ...typeof req.body.title !== 'undefined' && { title: req.body.title },
+    ...typeof req.body.done !== 'undefined' && { done: req.body.done },
+  }
+  Task.update({ _id: req.params.taskId }, data, { new: true })
+    .catch(err => res.send(err))
+    .then(taskUpdated => res.json(taskUpdated))
+})
+
 export default router

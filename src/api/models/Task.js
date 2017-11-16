@@ -7,7 +7,7 @@ const taskSchema = new Schema({
     type: String,
   },
   done: {
-    type: String,
+    type: Boolean,
   },
 })
 
