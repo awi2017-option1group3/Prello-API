@@ -39,6 +39,10 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Board',
   }],
+  notifications: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Notification',
+  }],
 })
 
 userSchema.set('toJSON', {
