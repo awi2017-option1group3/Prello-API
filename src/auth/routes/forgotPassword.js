@@ -6,11 +6,9 @@ import moment from 'moment'
 import ForgotPassword from '../models/forgotPassword'
 import User from '../../api/models/User'
 
-
 const router = express.Router()
 
 const env = Object.assign({}, process.env)
-console.log(env)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
