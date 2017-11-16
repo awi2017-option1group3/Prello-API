@@ -26,6 +26,16 @@ Go to the API folder using:
 
 `cd Prello-API`
 
+#### Configuring the environment
+
+* Create a `.env` file at the root of the API (same level as `package.json`)
+* Fill it with the two tokens retrieved from your gmail account as the following example
+
+```env
+SMTP_ID=yourGmailAddress
+SMTP_PASSWORD=yourPasswordGmail
+```
+
 Install the node_modules:
 
 `npm install`
@@ -46,9 +56,12 @@ On the Heroku website:
 
 1. Create an Heroku app.
 2. Using the panel "Resources", link the add-on 'mLab' to your app.
-3. Using the panel "Deploy", link the github repository to your app (and enable automatic deploys).
-4. Using the panel "Deploy", deploy the master branch (at the end of the page). This action can take a while (generally 1 min).
-5. Open the app using the "Open app" top-right button.
+3. Using the panel "Settings", add two config variables: 
+ * `SMTP_ID`, with the value of `address@gmail`
+ * `SMTP_PASSWORD` , with the value of `your_gmail_password`
+4. Using the panel "Deploy", link the github repository to your app (and enable automatic deploys).
+5. Using the panel "Deploy", deploy the master branch (at the end of the page). This action can take a while (generally 1 min).
+6. Open the app using the "Open app" top-right button.
 
 ### Usage
 
