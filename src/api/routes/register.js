@@ -16,7 +16,6 @@ const transporter = nodemailer.createTransport({
 })
 
 router.post('/', (req, res) => {
-  // TODO: Create a validation system returning beautiful errors
   if (!req.body.fullName) {
     res.send('You must provide your full name.')
   } else if (!req.body.email) {
