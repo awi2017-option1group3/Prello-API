@@ -29,7 +29,7 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-// Auth
+// oAuth
 app.oauth = oAuthServer({
   model: authService,
   grants: authService.authorizedGrants,
