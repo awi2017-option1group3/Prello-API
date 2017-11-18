@@ -8,7 +8,6 @@ const router = express.Router()
 
 
 router.post('/:token/validateUser', (req, res) => {
-  console.log(req.params.token)
   RegistrationCheckToken.findOne({ token: req.params.token }).exec()
     .catch(err => res.send(err))
     .then((registrationToken) => {
