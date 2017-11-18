@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 import oAuthServer from 'node-oauth2-server'
 import path from 'path'
 import socketio from 'socket.io'
+import redis from 'redis'
 
 import {} from './envLoader'
 import authRouter from './auth/routes/index'
@@ -18,10 +19,11 @@ const app = express()
 const server = http.Server(app)
 const io = socketio(server)
 const port = process.env.PORT || 8000
-const db = process.env.MONGODB_URI || 'mongodb://localhost/prello'
+const mongoDB = process.env.MONGODB_URI || 'mongodb://localhost/prello'
+const redisClient = redis.createClient(process.env.REDIS_URL) // If no env var, use the default local config
 
 mongoose.Promise = global.Promise
-mongoose.connect(db, { useMongoClient: true })
+mongoose.connect(mongoDB, { useMongoClient: true })
 
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -48,4 +50,4 @@ server.listen(port, () => {
 })
 
 // Listening Websockets for real-time
-io.on('connection', websockets)
+io.on('connection', websockets(io, redisClient))
