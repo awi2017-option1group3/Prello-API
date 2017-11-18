@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
       fullName: req.body.fullName,
       email: req.body.email,
     }
-    const offset = moment().add(10, 'm')
+    const offset = moment().add(1, 'h')
     const key = offset.toISOString()
     const tokenKey = bcrypt.hashSync(key, 10)
     const tokenUrl = encodeURIComponent(tokenKey)

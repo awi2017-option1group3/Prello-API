@@ -56,11 +56,11 @@ const getUser = (email, password, callback) => (
     .then((user) => {
       if (!user) {
         callback(null, null)
-      } else {
+      } else if (user.registrationChecked) {
         return bcrypt.compare(password, user.password)
       }
     })
-    .then(res => res ? callback(null, email) : callback(null, null))
+    .then(res => (res ? callback(null, email) : callback(null, null)))
 )
 
 const getClient = (clientId, clientSecret, callback) => {
