@@ -9,6 +9,10 @@ const taskSchema = new Schema({
   done: {
     type: Boolean,
   },
+  taskListId: {
+    type: Schema.Types.ObjectId,
+    ref: 'TaskList',
+  },
 })
 
 taskSchema.set('toJSON', {

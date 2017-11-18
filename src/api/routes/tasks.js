@@ -24,9 +24,18 @@ router.put('/:taskId', (req, res) => {
     ...typeof req.body.title !== 'undefined' && { title: req.body.title },
     ...typeof req.body.done !== 'undefined' && { done: req.body.done },
   }
-  Task.update({ _id: req.params.taskId }, data, { new: true })
-    .catch(err => res.send(err))
-    .then(taskUpdated => res.json(taskUpdated))
+  Task.findOneAndUpdate(
+    { _id: req.params.taskId }, data, {
+      safe: true, upsert: true, multi: true, new: true, 
+    },
+    (err, taskUpdated) => {
+      if (err) {
+        res.send(err)
+      } else {
+        res.json(taskUpdated)
+      }
+    },
+  )
 })
 
 export default router

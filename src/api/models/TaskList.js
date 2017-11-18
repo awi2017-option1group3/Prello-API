@@ -5,6 +5,7 @@ const Schema = mongoose.Schema
 const taskListSchema = new Schema({
   title: {
     type: String,
+    default: '',
   },
   tasks: [{
     type: Schema.Types.ObjectId,
