@@ -1,4 +1,5 @@
 import express from 'express'
+import bcrypt from 'bcrypt'
 import User from '../models/User'
 import Board from '../models/Board'
 import Notification from '../models/Notification'
@@ -140,6 +141,45 @@ router.post('/:userId/notifications/', (req, res) => {
         }
       })
     })
+})
+
+router.post('/:userId/update/', (req, res) => {
+  if (!req.body.password) {
+    const update = {
+      $set: {
+        fullName: req.body.fullName,
+        initials: req.body.fullName.split(' ').map(word => word[0]).join(''),
+      },
+    }
+    User.findOneAndUpdate({ _id: req.params.userId }, update, {}, (err) => {
+      if (err) {
+        res.send(err)
+      } else {
+        res.status(200)
+      }
+    })
+  } else {
+    const update = {
+      $set: {
+        fullName: req.body.fullName,
+        initials: req.body.fullName.split(' ').map(word => word[0]).join(''),
+        password: bcrypt.hashSync(req.body.password, 10),
+      },
+    }
+    User.findOneAndUpdate({ _id: req.params.userId }, update, {}, (err) => {
+      if (err) {
+        res.send(err)
+      } else {
+        res.status(200)
+      }
+    })
+  }
+})
+
+router.delete('/:userId', (req, res) => {
+  User.remove({ _id: req.params.userId })
+    .catch(err => res.send(err))
+    .then(() => res.end())
 })
 
 export default router
