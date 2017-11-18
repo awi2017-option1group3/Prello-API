@@ -36,6 +36,11 @@ Go to the API folder using:
 SMTP_ID=yourGmailAddress
 SMTP_PASSWORD=yourPasswordGmail
 ```
+* If you want to use forgot Password feature and check registration feature, you need to install the client and fill the `.env` file with the URL of the client
+
+```env
+CLIENT_URL=yourClientURL
+```
 
 Install the node_modules:
 
@@ -58,9 +63,10 @@ On the Heroku website:
 1. Create an Heroku app.
 2. Using the panel "Resources", link the add-on 'mLab' to your app.
 3. Using the panel "Resources", link the add-on 'Heroku Redis' to your app.
-4. Using the panel "Settings", add two config variables: 
+4. Using the panel "Settings", add three config variables: 
  * `SMTP_ID`, with the value of `address@gmail`
  * `SMTP_PASSWORD` , with the value of `your_gmail_password`
+ $ `CLIENT_URL`, with the value of `https://yourClientURL`
 5. Using the panel "Deploy", link the github repository to your app (and enable automatic deploys).
 6. Using the panel "Deploy", deploy the master branch (at the end of the page). This action can take a while (generally 1 min).
 7. Open the app using the "Open app" top-right button.

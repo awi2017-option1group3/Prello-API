@@ -43,10 +43,10 @@ router.post('/', (req, res) => {
               subject: 'Forgot password Prello by Gluon ', // Subject line
               text: `Hi ${user.fullName} !` +
               'follow this link to reset your password: ' +
-              `https://prello-by-gluon.herokuapp.com/forgotPassword/${tokenUrl}` +
+              `${env.CLIENT_URL}/forgotPassword/${tokenUrl}` +
               `Prello Team by Gluon`, // plain text body
               html: `<div><h3>Hi ${user.fullName} !</h3> <p>follow this link to reset your password:</p> 
-            <p>https://prello-by-gluon.herokuapp.com/forgotPassword/${tokenUrl} </p><p>Prello Team by Gluon</p></div>`, // html body
+            <p>${env.CLIENT_URL}/forgotPassword/${tokenUrl} </p><p>Prello Team by Gluon</p></div>`, // html body
             }
 
             transporter.sendMail(mailOptions, (error, info) => {
