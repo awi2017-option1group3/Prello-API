@@ -29,6 +29,10 @@ const userSchema = new Schema({
   bio: {
     type: String,
   },
+  registrationChecked: {
+    type: Boolean,
+    default: false,
+  },
   passwordResetToken: String,
   resetTokenExpires: Date,
   boards: [{
