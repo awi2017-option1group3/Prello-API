@@ -74,13 +74,13 @@ router.post('/', (req, res) => {
                 text: `Hi ${user.fullName} !` +
                   'We are so glad that you chose to join us on Prello platform. ' +
                 'Follow this link to validate your account on Prello: ' +
-                `https://prello-by-gluon.herokuapp.com/registration/${tokenUrl}` +
+                `${env.CLIENT_URL}/registration/${tokenUrl}` +
                 'If you didn\'t register on prello platform and you received this email, ignore this email' +
                 'Prello Team by Gluon', // plain text body
                 html: `<div><h3>Hi ${user.fullName} !</h3> 
                 <p>We are so glad that you chose to join us on Prello platform.</p>
                 <p>Follow this link to validate your account on Prello:</p> 
-                <p>https://prello-by-gluon.herokuapp.com/registration/${tokenUrl} </p>
+                <p>${env.CLIENT_URL}/registration/${tokenUrl} </p>
                 <p>If you didn't register on prello platform and you received this email, ignore this email</p>
                 <p>Prello Team by Gluon</p></div>`, // html body
               }
