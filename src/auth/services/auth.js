@@ -6,11 +6,12 @@ import Client from '../models/Client'
 import RefreshToken from '../models/RefreshToken'
 import User from '../../api/models/User'
 
+const env = Object.assign({}, process.env)
 const ldapAuth = new LdapAuth({
-  url: 'ldap://ldap.forumsys.com:389',
-  bindDN: 'cn=read-only-admin,dc=example,dc=com',
-  bindCredentials: 'password',
-  searchBase: 'dc=example,dc=com',
+  url: env.LDAP_URL,
+  bindDN: env.LDAP_BIND_DN,
+  bindCredentials: env.LDAP_BIND_CREDENTIALS,
+  searchBase: env.LDAP_SEARCH_BASE,
   searchFilter: '(uid={{username}})',
   reconnect: true,
 })
@@ -67,6 +68,8 @@ const validateAndGetUserWithLDAP = (email, password) => new Promise((resolve, re
   const splittedEmail = email.split('@')
   if (splittedEmail.length >= 2) {
     const ldapUsername = splittedEmail[0]
+    console.log('will hit the ldap for ')
+    console.log(ldapUsername)
     ldapAuth
       .authenticate(ldapUsername, password, (err, ldapUser) => {
         if (err) {
