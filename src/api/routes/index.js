@@ -15,7 +15,7 @@ router.use('/lists', lists)
 router.use('/cards', cards)
 router.use('/users', users)
 router.use('/comments', comments)
-router.use('/tasklist', taskLists)
+router.use('/tasklists', taskLists)
 router.use('/tasks', tasks)
 router.use('/notifications', notifications)
 router.get('/', (req, res) => {

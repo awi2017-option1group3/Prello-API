@@ -66,7 +66,6 @@ router.get('/:cardId/tasklists/', (req, res) => {
     }
   }).populate({
     path: 'taskLists',
-    model: 'TaskList',
     populate: {
       path: 'tasks',
       model: 'Task',
@@ -296,6 +295,18 @@ router.delete('/:cardId/responsible/', (req, res) => {
       { responsible: null },
   }
   cardUpdate(req.params.cardId, update, 'responsible', 'User', res)
+})
+
+router.delete('/:cardId/tasklists/:tasklistId', (req, res) => {
+  const update = {
+    $pull:
+      { taskLists: req.params.tasklistId },
+  }
+  TaskList.remove({ _id: req.params.tasklistId })
+    .catch(err => res.send(err))
+    .then(() => Task.remove({ taskListId: req.params.tasklistId }))
+    .catch(err => res.send(err))
+    .then(cardUpdate(req.params.cardId, update, 'taskLists', 'TaskList', res))
 })
 
 export default router
