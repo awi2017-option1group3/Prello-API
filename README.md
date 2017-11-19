@@ -1,3 +1,5 @@
+Try our API here : https://prello-api-by-gluon.herokuapp.com/
+
 # Prello (API)
 
 Study project attempting to make a Trello clone. 
