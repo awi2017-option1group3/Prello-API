@@ -9,11 +9,7 @@ const commentSchema = new Schema({
   date: {
     type: Date,
   },
-  cardId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Card',
-  },
-  userId: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
   },

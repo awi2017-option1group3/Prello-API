@@ -81,7 +81,14 @@ router.get('/:cardId/comments/', (req, res) => {
       res.json(card.comments)
     }
   }).populate('comments')
-    .populate('comments.userId')
+    .populate({
+      path: 'comments',
+      model: 'Comment',
+      populate: {
+        path: 'user',
+        model: 'User',
+      },
+    })
     .exec()
 })
 
@@ -172,15 +179,19 @@ router.post('/:cardId/comments/', (req, res) => {
   const comment = new Comment({
     content: req.body.content,
     date: Date.now(),
-    userId: req.body.userId,
+    user: req.body.userId,
   })
-  Comment.create(comment)
+  Comment
+    .create(comment)
     .then((newComment) => {
       const update = {
         $push:
           { comments: newComment.id },
       }
-      cardUpdate(req.params.cardId, update, 'comments', 'Comment', res)
+      Card
+        .findOneAndUpdate({ _id: req.params.cardId }, update, { safe: true, upsert: true, new: true }).exec()
+        .then(() => Comment.findOne({ _id: newComment.id }).populate('user').exec())
+        .then(commentPopulated => res.json(commentPopulated))
     })
 })
 
