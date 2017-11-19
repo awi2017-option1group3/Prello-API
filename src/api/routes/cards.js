@@ -252,6 +252,7 @@ router.put('/:cardId', (req, res) => {
       .populate('assignees')
       .populate('responsible')
       .populate('comments')
+      .populate('taskLists')
       .exec())
     .catch(err => res.send(err))
     .then(cardUpdated => res.json(cardUpdated))
