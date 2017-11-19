@@ -261,7 +261,7 @@ router.put('/:cardId', (req, res) => {
 router.delete('/:cardId/assignees/:memberId', (req, res) => {
   const update = {
     $pull: {
-      contributors: req.params.memberId,
+      assignees: req.params.memberId,
     },
   }
   cardUpdate(req.params.cardId, update, 'assignees', 'User', res)
