@@ -68,8 +68,6 @@ const validateAndGetUserWithLDAP = (email, password) => new Promise((resolve, re
   const splittedEmail = email.split('@')
   if (splittedEmail.length >= 2) {
     const ldapUsername = splittedEmail[0]
-    console.log('will hit the ldap for ')
-    console.log(ldapUsername)
     ldapAuth
       .authenticate(ldapUsername, password, (err, ldapUser) => {
         if (err) {

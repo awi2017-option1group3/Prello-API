@@ -33,7 +33,6 @@ app.use(bodyParser.json())
 app.oauth = oAuthServer({
   model: authService,
   grants: authService.authorizedGrants,
-  debug: true,
 })
 app.set('views', path.join(__dirname, 'auth/views'))
 app.set('view engine', 'pug')
