@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 })
 
 router.post('/', (req, res) => {
-  const now = moment().add(5, 'm')
+  const now = moment().add(30, 'm')
   const key = now.toISOString()
   const tokenKey = bcrypt.hashSync(key, 10)
   const tokenUrl = encodeURIComponent(tokenKey)
