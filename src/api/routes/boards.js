@@ -139,13 +139,14 @@ router.post('/:boardId/lists/', (req, res) => {
 // Labels
 
 router.get('/:boardId/labels', (req, res) => {
-  Label.find({ boardId: req.params.boardId }, (err, labels) => {
+  Board.findOne({ _id: req.params.boardId }, (err, board) => {
     if (err) {
       res.send(err)
     } else {
-      res.json(labels)
+      res.json(board.labels)
     }
-  })
+  }).populate('labels')
+    .exec()
 })
 
 router.post('/:boardId/labels/', (req, res) => {
@@ -154,13 +155,38 @@ router.post('/:boardId/labels/', (req, res) => {
     color: req.body.color,
     boardId: req.params.boardId,
   })
-  label.save((err, newLabel) => {
-    if (err) {
-      res.send(err)
-    } else {
-      res.json(newLabel)
-    }
-  })
+  Label.create(label)
+    .then((newLabel) => {
+      const boardUpdate = {
+        $push: {
+          labels: newLabel.id,
+        },
+      }
+      Board.findOneAndUpdate({ _id: req.params.boardId }, boardUpdate, { safe: true, upsert: true, new: true }, (err) => {
+        if (err) {
+          res.send(err)
+        } else {
+          res.json(newLabel)
+        }
+      })
+    })
+})
+
+router.delete('/:boardId/labels/:labelId', (req, res) => {
+  const boardUpdate = {
+    $pull: {
+      labels: req.params.labelId,
+    },
+  }
+  const cardUpdate = {
+    $pull: {
+      labels: req.params.labelId,
+    },
+  }
+  Board
+    .findOneAndUpdate({ _id: req.params.boardId }, boardUpdate, { safe: true, upsert: true, new: true }).exec()
+    .then(() => Card.updateMany({}, cardUpdate, { safe: true, upsert: true, new: true }))
+    .then(() => res.end())
 })
 
 export default router
